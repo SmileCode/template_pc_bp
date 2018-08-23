@@ -3,19 +3,7 @@
  */
 import Vue from 'vue';
 
-let vueUU = {
-    /**
-     * 两个对象之间的值合并
-     * a 给值者
-     * b 赋值者
-     * 返回 b对象
-     */
-    extendObj (a, b){
-        for (let o in a) {
-            b[o] = a[o];
-        }
-        return b;
-    },
+let lsx = {
     /**
      * 获取链接上的参数
      * @param {string} name 需要查询的参数
@@ -107,63 +95,6 @@ let vueUU = {
     global: {
 
     },
-    /**
-     * 判断是否滑动到底部
-     * @returns {boolean}
-     */
-     scrollBottom () {
-        let _h = $(".app-main").scrollTop() - $(".page").height() + $(window).height();
-        return (_h === 100 || _h === 120);
-    },
-    /**
-     * 数组合并去重
-     */
-     mergeArray (a, b){
-
-        for (let i = 0; i < a.length; i++) {
-            for (let j = 0; j < b.length; j++) {
-                if (a[i] === b[j]) {
-                    a.splice(i, 1);
-                }
-            }
-        }
-
-        return a.concat(b);
-    },
-    /**
-     * 数组去重
-     */
-    uniqueArr (arr){
-        let res = [arr[0]],
-            repeat = false;
-
-        for (let i = 1; i < arr.length; i++) {
-            repeat = false;
-
-            for (let j = 0; j < res.length; j++) {
-                if (arr[i] === res[j]) {
-                    repeat = true;
-                    break;
-                }
-            }
-            if (!repeat) {
-                res.push(arr[i]);
-            }
-        }
-
-        return res;
-    },
-    /**
-     * 获取对象的第一个值
-     */
-    getObjectFirst (obj){
-        for(let o in obj){
-            return {
-                key: o,
-                val: obj[o]
-            }
-        }
-    },
     setLocalStorage (a, b){
         window.localStorage.setItem(a, b);
     },
@@ -185,20 +116,10 @@ let vueUU = {
     /**
      * 设置请求头
      */
-     setHeader (name, val){
+    setHeader (name, val){
         Vue.http.headers.common[name] = val;
     },
-    getAuth (){
-         let _this = this;
-        _this.http({
-            url: "developer/my"
-        }, function (data) {
-            _this.setLocalStorage("HOUSE_BP_AUTH", data.access_level);
-            let _login = JSON.parse(_this.getLocalStorage("HOUSE_BP_LOGIN"));
-            _login.house_privileged = data.house_privileged;
-            _this.setLocalStorage("HOUSE_BP_LOGIN", JSON.stringify(_login));
-        });
-    },
+
     /**
      * 数据请求
      */
@@ -221,8 +142,8 @@ let vueUU = {
             if(data.headers.map.Token || data.headers.map.token){
                 let _token = data.headers.map.Token ? data.headers.map.Token[0] : data.headers.map.token[0];
                 _this.global.token = _token;
-                _this.setHeader("token", _token);
-                _this.setLocalStorage("HOUSE_BP_TOKEN", _token);
+                _this.setHeader(window.H_TOKEN_NAME, _token);
+                _this.setLocalStorage(window.S_TOKEN_NAME, _token);
             }
 
             let d = data.data;
@@ -236,17 +157,8 @@ let vueUU = {
             } else if(d.code === 0) {
                 callback && callback(d.data);
             } else if(d.code === 2){
-                if(param.vueThis && param.loading){
-                    param.vueThis[param.loading].close();
-                }
-                _this.clearLocalStorage("HOUSE_BP_TOKEN");
+                _this.clearLocalStorage(window.TOKEN_NAME);
                 window.location.href = "#/login";
-            } else if(d.code === 112) {
-                _alert("你没有权限");
-                _this.getAuth();
-                window.location.reload();
-            } else if(d.code === 115) {
-                _alert("目前为抢购阶段，不支持任何更改!");
             } else {
                 _alert(d.msg);
             }
@@ -270,34 +182,9 @@ let vueUU = {
     }
 };
 
-(function (){
-    let isHttps = /(https\:)/.test(window.location.origin) ? "https" : "http";
+(() => {
 
-    const hostUrl = {
-        dev: {
-            uploadUrl: isHttps + "://qgapidev.playwx.com/api/",
-            sourceUrl: isHttps + "://qgdev.playwx.com/html/",
-            oApiUrl:   isHttps + "://oapi.playwx.com/api/",
-            qgApiUrl:  isHttps + "://qgapidev.playwx.com/api/"
-        },
-        master: {
-            uploadUrl: "https://qgapi.playwx.com/api/",
-            sourceUrl: "https://qg.playwx.com/html/",
-            oApiUrl:   "https://oapi.playwx.com/api/",
-            qgApiUrl:  "https://qgapi.playwx.com/api/"
-        }
-    };
-
-    let hostType = "master";
-
-    if(window.location.origin !== "https://qg.playwx.com"){
-        hostType = "dev";
-    }
-
-    for(let o in hostUrl[hostType]){
-        vueUU.global[o] = hostUrl[hostType][o];
-    }
 })();
 
 
-export default vueUU
+export default lsx

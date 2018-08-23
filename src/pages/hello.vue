@@ -1,6 +1,6 @@
 <template>
     <div>
-        <uu-com :data="msg"></uu-com>
+        <lsx-com :data="msg"></lsx-com>
     </div>
 </template>
 
@@ -10,12 +10,12 @@
         name: 'hello',
         props: [],
         components: {
-            uuCom
+            lsxCom
         },
         data() {
 
             return {
-                msg: "hello uu-cli template_pc_bp"
+                msg: "hello lsx-cli template-pc"
             }
         },
         methods: {},

@@ -7,7 +7,10 @@ import $ from 'jquery';
 import './lib/index.css';
 import 'element-ui/lib/theme-chalk/index.css';
 import routes from './router/router';
-import vueUU from 'vueUU';
+import lsx from 'lsx';
+
+window.S_TOKEN_NAME = "TOKEN_NAME";
+window.H_TOKEN_NAME = "token";
 
 Vue.config.productionTip = false;
 
